@@ -67,14 +67,14 @@ class LabTester:
         self.active_tests = {}
         self.lock = threading.Lock()
     
-    def validate_local_ip(self, ip):
-        """শুধু লোকাল IP গ্রহণ করো"""
-        local_ranges = [
-            '192.168.',
-            '10.',
-            '172.16.',
-            '127.',
-            'localhost'
+    def validate_ip(self, ip):
+        """IP গ্রহণ করো"""
+        ip_ranges = [
+            "`www.example.com`\n"
+            "`89.167.33.78`\n" 
+            "`192.168.1.100`\n"
+            "`192.168.1.100:8080`\n"
+            "`10.0.0.50:3000`"
         ]
         return any(ip.startswith(r) for r in local_ranges)
     
@@ -140,9 +140,13 @@ class LabTester:
     def start_test(self, user_id, target_ip, target_port, test_type, threads, duration):
         """টেস্ট শুরু করো"""
         
-        # লোকাল IP চেক করো
+        # IP চেক করো
         if not self.validate_local_ip(target_ip):
-            return False, "❌ শুধুমাত্র লোকাল IP (192.168.x.x, 10.x.x.x, 127.x.x.x)\n\n⚠️ বাইরের ইনফ্রাস্ট্রাকচারে টেস্ট করা যায় না।"
+            return False, "`www.example.com`\n"
+            "`89.167.33.78`\n" 
+            "`192.168.1.100`\n"
+            "`192.168.1.100:8080`\n"
+            "`10.0.0.50:3000`"
         
         with self.lock:
             self.active_tests[user_id] = {
@@ -234,7 +238,6 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "✅ শুধুমাত্র লোকাল নেটওয়ার্ক (192.168.x.x, 10.x.x.x)\n"
         "✅ আপনার নিজের ডিভাইস/VM\n"
         "✅ সিকিউরিটি টেস্টিং এবং শেখার জন্য\n\n"
-        "⚠️ বাইরের ইনফ্রাস্ট্রাকচারে ব্যবহার করা যায় না।",
         reply_markup=reply_markup,
         parse_mode="Markdown"
     )
@@ -246,13 +249,15 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "• `udp` - UDP ফ্লুড\n"
         "• `tcp` - TCP সংযোগ\n"
         "• `http` - HTTP রিকোয়েস্ট\n\n"
-        "**লোকাল IP রেঞ্জ:**\n"
+        "**IP রেঞ্জ:**\n"
         "`192.168.x.x` - সবচেয়ে কমন\n"
         "`10.x.x.x` - বড় নেটওয়ার্ক\n"
         "`172.16.x.x` - প্রাইভেট রেঞ্জ\n\n"
-        "**উদাহরণ টার্গেট:**\n"
-        "`192.168.1.100` - লোকাল মেশিন\n"
-        "`192.168.1.100:8080` - কাস্টম পোর্ট",
+        "`www.example.com`\n"
+            "`89.167.33.78`\n" 
+            "`192.168.1.100`\n"
+            "`192.168.1.100:8080`\n"
+            "`10.0.0.50:3000`",
         parse_mode="Markdown"
     )
 
@@ -264,8 +269,10 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     
     if query.data == "new_test":
         await query.edit_message_text(
-            "🎯 লোকাল IP এড্রেস দাও:\n\n"
+            "🎯 IP এড্রেস দাও:\n\n"
             "উদাহরণ:\n"
+            "`www.example.com`\n"
+            "`89.167.33.78`\n" 
             "`192.168.1.100`\n"
             "`192.168.1.100:8080`\n"
             "`10.0.0.50:3000`"
@@ -307,9 +314,6 @@ async def handle_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             "/start - মেনু\n"
             "/stop - থামাও\n"
             "/status - স্ট্যাটাস\n\n"
-            "⚠️ **শুধুমাত্র লোকাল নেটওয়ার্ক**\n"
-            "বাইরের IP ব্লক করা হয়েছে।",
-            parse_mode="Markdown"
         )
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
