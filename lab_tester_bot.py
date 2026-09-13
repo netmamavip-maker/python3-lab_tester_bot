@@ -240,8 +240,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         "✅ সিকিউরিটি টেস্টিং এবং শেখার জন্য\n\n"
         reply_markup=reply_markup,
         parse_mode="Markdown"
-    )
-
+    ) 
 async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """সাহায্য"""
     await update.message.reply_text(
