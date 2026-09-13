@@ -177,7 +177,12 @@ class LabTester:
             )
             t.start()
         
-        return True, f"🧪 ল্যাব টেস্ট শুরু\n\n📍 টার্গেট: {target_ip}:{target_port}\n⚔️ টাইপ: {test_type}\n🧵 থ্রেড: {threads}\n⏱️ সময়: {duration}s"
+        return True, f"🧪 ল্যাব টেস্ট শুরু\n\n
+        "📍 টার্গেট: {target_ip}:{target_port}\n
+        "⚔️ টাইপ: {test_type}\n
+        "🧵 থ্রেড: {threads}\n
+        "⏱️ সময়: {duration}s"
+    ) 
     
     def stop_test(self, user_id):
         """টেস্ট থামাও"""
