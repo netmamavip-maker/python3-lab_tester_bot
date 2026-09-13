@@ -1,0 +1,1 @@
+web: python3 lab_tester_bot.py
